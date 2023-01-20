@@ -1,4 +1,4 @@
-import db from '../lib/db.js';
+import db from './db.js';
 
 const delay = (time) => {
   return new Promise(resolve => setTimeout(resolve, time))

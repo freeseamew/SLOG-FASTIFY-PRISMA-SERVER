@@ -1,22 +1,20 @@
-
 import jwt from 'jsonwebtoken'
-import db from '../lib/db.js'
-import appMessages from '../lib/appMessages.js';
+import db from './db.js'
+import appMessages from './appMessages.js';
 import bcrypt from 'bcrypt'
-
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+
 dotenv.config()
 
+// const SECRET_KEY = 'my-secret-key' 
+// const round = 10
+// const accessTokenExpires = '15m'
+// const refreshTokenExpires = '7 days'
 
-const SECRET_KEY = 'my-secret-key' // 추후에 .env로 교체 예정
-const round = 10 // .env 등으로 교체 예정
-const accessTokenExpires = '15m' // .env 등으로 교체 예정
-const refreshTokenExpires = '7 days' // .env 등으로 교체 예정
-
-// const SECRET_KEY = process.env.SECRET_KEY
-// const round = process.env.HASH_ROUND
-// const accessTokenExpires = process.env.ACCESS_TOKEN_EXPIRES 
-// const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES
+const SECRET_KEY = process.env.SECRET_KEY
+const round = Number(process.env.HASH_ROUND) 
+const accessTokenExpires = process.env.ACCESS_TOKEN_EXPIRES 
+const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES
 
 const generateHash = async (pwd='') => {
   const hashPwd = await bcrypt.hashSync(pwd, round)

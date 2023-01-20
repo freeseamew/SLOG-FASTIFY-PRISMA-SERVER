@@ -36,20 +36,6 @@ const likeCompareArticles = async(articles, userId) => {
   return articlesWithLike
 }
 
-// const flattenArticleObject = (article) => {
-//   let newArticle = {
-//     id: article.id,
-//     content: article.content,
-//     commentCount: article.commentCount,
-//     likeCount: article.likeCount,
-//     createdAt: article.createdAt,
-//     userId: article.user.id,
-//     userName: article.user.name,
-//     userEmail: article.user.email,
-//   }  
-//   return newArticle
-// }
-
 const flattenArticleObject = (object) => {
   let result = {}
 

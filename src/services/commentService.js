@@ -44,7 +44,6 @@ const createComment = async (req, rep) => {
   }
 }
 
-// fastify에서 param 스키마를 적용하지 않으면 articleId가 string이 되어 오류 발생 이때는 Number()로 형변환 해야함.
 const readComment = async (req, rep) => {
   
   const { articleId } = req.params

@@ -32,8 +32,6 @@ const createArticle = async (req, rep) => {
 }
 
 const readArticleList = async (req, rep) => {
-
-  // const { pageNumber=0, mode=NOMAL_FETCH } = req.query
   const { pageNumber=0, mode=ALL } = req.query
   const userId = req.headers.user.id
   const pageSize = 10
@@ -48,8 +46,6 @@ const readArticleList = async (req, rep) => {
   let flattenArticles = []
 
   try {
-
-    // if(mode === NOMAL_FETCH) {
     if(mode === ALL) {      
       
       articles = await db.article.findMany({
@@ -71,11 +67,9 @@ const readArticleList = async (req, rep) => {
 
       totalArticleCount = await db.article.count()            
     }
-    
-    // if(mode === MY_FETCH) {
+
     if(mode === MY) {      
 
-      // const userId = req.headers.user.id
       if(!userId) throw appMessages.badRequest
 
       articles = await db.article.findMany({
@@ -106,7 +100,6 @@ const readArticleList = async (req, rep) => {
     }
 
     totalPageCount = Math.ceil(totalArticleCount / pageSize)
-    
     flattenArticles = articles.map(article => flattenArticleObject(article))
     articlesWithLikeMe = await likeCompareArticles(flattenArticles, userId)
 
@@ -118,10 +111,7 @@ const readArticleList = async (req, rep) => {
     }
   }
   catch(err) {
-    // error은 throw 로 해야 해당 오류가 클라이언트로 전달됨. 아니면 500에러가 발생
-    // throw appMessages.notFound
-    throw err
-    
+    throw err   
   }
 }
 
@@ -184,14 +174,6 @@ const updateArticle = async (req, rep) => {
 
 const deleteArticle = async (req, rep) => {
   
-  /**
-   * 게시글의 경우 fk로 연결된 덧글이 있으면 삭제가 안됨(RDB구조상)
-   * 해결방법1. article에 게시글 상태 컬럼을 두고 삭제 해당 상태값을 false등으로 해서 게시글이 삭제된 것처럼 해줌
-   * 해경방법2. 해당 article과 연결된 comment를 먼저 삭제 후 article삭제
-   * 
-   * 우리의 경우 예제프로젝트 이므로 2번을 통해서 진행예정
-   */ 
-
   const { articleId } = req.params
   const userId = req.headers.user.id
 

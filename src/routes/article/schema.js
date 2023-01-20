@@ -7,7 +7,6 @@ const articleType = {
   commentCount: schemaType.integer,
   createdAt: schemaType.string,
   userId: schemaType.integer,
-  // userName: schemaType.string,
   userEmail: schemaType.string,
   likeMe: schemaType.boolean,
 }

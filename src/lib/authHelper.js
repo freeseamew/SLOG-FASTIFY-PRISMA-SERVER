@@ -2,14 +2,9 @@ import jwt from 'jsonwebtoken'
 import db from './db.js'
 import appMessages from './appMessages.js';
 import bcrypt from 'bcrypt'
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import * as dotenv from 'dotenv'
 
 dotenv.config()
-
-// const SECRET_KEY = 'my-secret-key' 
-// const round = 10
-// const accessTokenExpires = '15m'
-// const refreshTokenExpires = '7 days'
 
 const SECRET_KEY = process.env.SECRET_KEY
 const round = Number(process.env.HASH_ROUND) 

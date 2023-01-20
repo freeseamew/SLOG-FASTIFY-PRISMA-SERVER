@@ -3,7 +3,6 @@ import { createCommentSchema, readCommentSchema, deleteCommentSchema } from './s
 import FastifyAuth from '@fastify/auth';
 
 const commentRoute = async (fastify) => {
-  // fastify.get('/:articleId', {schema: readCommentSchema, handler: readComment})
   fastify.register(FastifyAuth).after(() => privateCommentRoute(fastify))
 }
 

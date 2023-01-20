@@ -6,8 +6,6 @@ const delay = (time) => {
 
 const likeCompareArticles = async(articles, userId) => {
 
-  // articles 목록에서 id값을 추출해 likes 가져오기
-  // 가져온 likes와 articles를 비교해 likeMe 설정
   let likes = []
 
   const verifyLikeMe = (article={}, likes=[]) => {

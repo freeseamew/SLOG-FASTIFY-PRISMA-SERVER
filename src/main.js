@@ -9,27 +9,22 @@ import cors from '@fastify/cors';
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-// import swaggerConfig from './config/swaggerConfig.js';
-
 const fastify = Fastify({
   logger: true
 })
 
 fastify.register(cors,{  
-  // origin: "http://127.0.0.1:3012",
   origin: true,
   credentials: true,
 })
 
 fastify.register(fasstifyCookie, {  
-  // domain:'http://127.0.0.1:5173/',
   domain:'http://localhost/',
   secret: "my-secret", // for cookies signature
   hook: 'onRequest', // set to false to disable cookie autoparsing or set autoparsing on any of the following hooks: 'onRequest', 'preParsing', 'preHandler', 'preValidation'. default: 'onRequest'
   parseOptions: {}  // options for parsing cookies  
 })
 
-// fastify.register(fastifySwagger, swaggerConfig)
 fastify.register(fastifySwagger, {  
   swagger: {
     info: {
@@ -64,19 +59,15 @@ fastify.register(fastifySwaggerUi, {
   transformSpecificationClone: true
 })
 
-
-// fastify.register(fastifySwaggerUi, swaggerConfig)
-
 fastify.register(routes)
 
 const start = async () => {
   try {
     await checkStartUser()
     await checkStartArticle()
-    
     await fastify.listen({ port: 3000 })
-    // await fastify.swagger()
-  } catch (err) {
+  } 
+  catch (err) {
     fastify.log.error(err)
     process.exit(1)
   }

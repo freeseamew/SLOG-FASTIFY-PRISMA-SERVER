@@ -7,10 +7,8 @@ import { generateHash, verifyPassword, generateAccessToken, generateRefreshToken
 const loginWithPassword = async (req, rep) => {
   const { email, pwd } = req.body
 
-  // 1) 이메일 패스워드 값 유무 확인
   if(!email || !pwd) appMessages.unauthorized
 
-  // 2) 해당 이메일의 가입자 정보 가져오기
   const authenticationUser = await db.user.findUnique({
     where: {
       email: email,
@@ -22,14 +20,11 @@ const loginWithPassword = async (req, rep) => {
     }
   })
 
-  // 3) 유저 정보가 없을 경우
   if(!authenticationUser) throw appMessages.unauthorized
 
-  // 4) 패스워드 확인 후 불일치 시 오류 throw
   const passwordVerification = await verifyPassword(email, pwd)
   if(!passwordVerification) throw appMessages.unauthorized
 
-  // 5)  토큰 생성
   const accessToken = await generateAccessToken(authenticationUser)
   const refreshToken = await generateRefreshToken(authenticationUser)
 
@@ -38,30 +33,14 @@ const loginWithPassword = async (req, rep) => {
     refreshToken: refreshToken,
   }
 
-  // 6) refreshToken 토큰 저장 
   await db.token.create({
     data: values,
   })
 
-  // 8) 토큰 리턴
-  // return {
-  //   accessToken: accessToken,
-  //   refreshToken: refreshToken,
-  // }
-
-  // rep.setCookie('access_token', accessToken, {
-  //   sameSite:'none',
-  //   secure: true,
-  //   httpOnly: true,
-  //   path: '/',
-  //   expires: new Date(Date.now() + 1000 * 60 * 60),
-  // })
-
   rep.setCookie('refresh_token', refreshToken, {
     domain: 'localhost',
     sameSite:'none',
-    secure: true, // https가 아닌 경우 쿠키를 전달하지 않는 다는 옵션
-    // secure: false, // safari의 경우 https로 해야만 secure: true가 작동됨. 
+    secure: true,
     httpOnly: true,
     path: '/',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
@@ -73,13 +52,11 @@ const loginWithPassword = async (req, rep) => {
     Authorization: accessToken
   }
 
-  // return appMessages.loginOk
   return result
 }
 
 const logout = async (req, rep) => {
 
-  // const { refresh_token } = req.headers
   const refresh_token = req.cookies.refresh_token
 
   if(!refresh_token) throw appMessages.unauthorized
@@ -91,7 +68,6 @@ const logout = async (req, rep) => {
       }
     })
 
-    // rep.clearCookie('access_token', { domain, path: '/' }) // 도메인이 설정된 경우만 
     rep.clearCookie('refresh_token', { path: '/' })
 
     return appMessages.logouOk
@@ -187,19 +163,17 @@ const currentlyAuth = async(req, ref, done) => {
   }
 }
 
-// const accessTokenAsAuth = async (req, rep, done) => {
 const verifySignIn = async (req, rep, done) => {
 
   const  { authorization } = req.headers;  
   const access_token = authorization
 
   try {
-    // 토큰이 없을 경우
-    if (!access_token) throw appMessages.unauthorized
     
+    if (!access_token) throw appMessages.unauthorized
+
     await verifyAccessToken(access_token)
     return true
-
   }
   catch(err) {
     throw err
@@ -212,6 +186,5 @@ export {
   register,
   refresh,
   currentlyAuth,
-  // accessTokenAsAuth,
   verifySignIn
 }

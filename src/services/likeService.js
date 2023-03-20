@@ -92,14 +92,12 @@ const cancelLike = async (req, rep) => {
 
 const readLikes = async (req, rep) => {
 
-  const { pageNumber } = req.query
+  const { pageNumber=0 } = req.query
   const userId = req.headers.user.id
-
-  const pageSize = 5
+  const pageSize = 10
   let skip = 0
-
-  if(pageNumber <= 1) skip = 0
-  if(pageNumber >= 2) skip = ((pageNumber-1) * pageSize)
+  
+  if(pageNumber > 1) skip = ((pageNumber - 1) * pageSize)
 
   let totalLikeCount = 0
   let totalPageCount = 0  

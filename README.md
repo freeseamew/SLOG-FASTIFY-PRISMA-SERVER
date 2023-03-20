@@ -8,7 +8,7 @@
 ```js
 npm i 
 
-완료 후
+// 완료 후
 
 npm start
 ```

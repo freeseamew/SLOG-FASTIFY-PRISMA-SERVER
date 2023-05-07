@@ -117,15 +117,16 @@ const readLikes = async (req, rep) => {
             commentCount: true,
             likeCount: true,
             createdAt: true,
+            user: true
           },
         },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
+        // user: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //   },
+        // },
       },
       orderBy: {
         id: 'desc',
@@ -149,9 +150,12 @@ const readLikes = async (req, rep) => {
         commentCount: article.article.commentCount,
         likeCount: article.article.likeCount,
         createdAt: article.article.createdAt,
-        userId: article.user.id,
-        userName: article.user.name,
-        userEmail: article.user.email,
+        // userId: article.user.id,
+        // userName: article.user.name,
+        // userEmail: article.user.email,
+        userId: article.article.user.id,
+        userName: article.article.user.name,
+        userEmail: article.article.user.email,        
         likeMe: true,
       }
 

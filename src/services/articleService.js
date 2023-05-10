@@ -2,6 +2,7 @@ import db from '../lib/db.js';
 import { ALL, MY } from '../lib/constants.js';
 import appMessages from '../lib/appMessages.js';
 import { delay, likeCompareArticles, flattenArticleObject } from '../lib/articleHelper.js';
+import { getCurrentDate } from '../lib/timeHelper.js';
 
 const createArticle = async (req, rep) => {
 
@@ -15,6 +16,7 @@ const createArticle = async (req, rep) => {
       title: title,
       content: content,
       userId: userId, 
+      createdAt: getCurrentDate(),
     }
 
     const result = await db.article.create({

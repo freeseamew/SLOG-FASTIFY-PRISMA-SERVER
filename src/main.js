@@ -19,7 +19,8 @@ fastify.register(cors,{
 })
 
 fastify.register(fasstifyCookie, {  
-  domain:'http://localhost/',
+  // domain:'http://localhost/',
+  // domain:'http://127.0.0.1/',
   secret: "my-secret", // for cookies signature
   hook: 'onRequest', // set to false to disable cookie autoparsing or set autoparsing on any of the following hooks: 'onRequest', 'preParsing', 'preHandler', 'preValidation'. default: 'onRequest'
   parseOptions: {}  // options for parsing cookies  

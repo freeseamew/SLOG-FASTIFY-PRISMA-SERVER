@@ -36,7 +36,7 @@ const likeCompareArticles = async(articles, userId) => {
   return articlesWithLike
 }
 
-const flattenArticleObject = (object) => {
+const flattenArticleObject = (object = {}) => {
   let result = {}
 
   const makeStrFirstUpper = (str) => {

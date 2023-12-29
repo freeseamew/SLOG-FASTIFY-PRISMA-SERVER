@@ -5,54 +5,65 @@ const SECRET_KEY = 'my-secret-key' // 추후에 .env로 교체 예정
 import { generateHash, verifyPassword, generateAccessToken, generateRefreshToken, duplicateVerifyUser, verifyRefreshToken, verifyAccessToken  } from '../lib/authHelper.js';
 
 const loginWithPassword = async (req, rep) => {
+  
+  console.log(`login start~~~~~~~~~~~`)
+
   const { email, pwd } = req.body
 
-  if(!email || !pwd) appMessages.unauthorized
+  if(!email || !pwd) throw appMessages.unauthorized
 
-  const authenticationUser = await db.user.findUnique({
-    where: {
-      email: email,
-    },
-    select: {
-      id: true,
-      email: true,
-      // name: true,
+  try {
+
+    const authenticationUser = await db.user.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        id: true,
+        email: true,
+        // name: true,
+      }
+    })
+  
+    if(!authenticationUser) throw appMessages.unauthorized
+  
+    const passwordVerification = await verifyPassword(email, pwd)
+    if(!passwordVerification) throw appMessages.unauthorized
+  
+    const accessToken = await generateAccessToken(authenticationUser)
+    const refreshToken = await generateRefreshToken(authenticationUser)
+  
+    const values ={
+      userId: authenticationUser.id,
+      refreshToken: refreshToken,
     }
-  })
-
-  if(!authenticationUser) throw appMessages.unauthorized
-
-  const passwordVerification = await verifyPassword(email, pwd)
-  if(!passwordVerification) throw appMessages.unauthorized
-
-  const accessToken = await generateAccessToken(authenticationUser)
-  const refreshToken = await generateRefreshToken(authenticationUser)
-
-  const values ={
-    userId: authenticationUser.id,
-    refreshToken: refreshToken,
+  
+    await db.token.create({
+      data: values,
+    })
+  
+    rep.setCookie('refresh_token', refreshToken, {
+      // 참고로 safari에서는 https가 아닌 환경에서 httpOnly 쿠키 생성 안됨
+      domain: 'localhost',
+      sameSite:'none',
+      secure: true,
+      httpOnly: true,
+      path: '/',
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    })  
+  
+    const result = {
+      id: authenticationUser.id,
+      email: authenticationUser.email,
+      Authorization: accessToken
+    }
+  
+    return result
+  }
+  catch(error) {
+    console.log(`loginError: ${error}`)
   }
 
-  await db.token.create({
-    data: values,
-  })
-
-  rep.setCookie('refresh_token', refreshToken, {
-    domain: 'localhost',
-    sameSite:'none',
-    secure: true,
-    httpOnly: true,
-    path: '/',
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  })  
-
-  const result = {
-    id: authenticationUser.id,
-    email: authenticationUser.email,
-    Authorization: accessToken
-  }
-
-  return result
 }
 
 const logout = async (req, rep) => {

@@ -99,12 +99,14 @@ const readArticleList = async (req, rep) => {
           userId: userId,
         }
       })      
-    }
+    }        
 
     totalPageCount = Math.ceil(totalArticleCount / pageSize)
     flattenArticles = articles.map(article => flattenArticleObject(article))
-    articlesWithLikeMe = await likeCompareArticles(flattenArticles, userId)
+    
+    console.log(`articles: ${JSON.stringify(articles) }`)
 
+    await likeCompareArticles(flattenArticles, userId)
     await delay(500)
 
     return {
